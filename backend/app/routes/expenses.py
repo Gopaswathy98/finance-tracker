@@ -30,7 +30,10 @@ def get_expense(expense_id: int):
     return {"error": "Expense not found"}
 
 @router.delete("/{expense_id}")
-def delete_expense(expense_id: int):
-    global expenses_db
-    expenses_db = [e for e in expenses_db if e.id != expense_id]
-    return {"message": f"Expense {expense_id} deleted"}
+def delete_expense(expense_id: int, db: Session = Depends(get_db)):
+    expense = db.query(models.Expense).filter(models.Expense.id == expense_id).first()
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    db.delete(expense)
+    db.commit()
+    return {"message": "Expense deleted"}
