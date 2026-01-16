@@ -1,33 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FinanceTracker</title>
+    <title>FinanceTracker Pro</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f0f2f5; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        h1 { color: #1a73e8; text-align: center; }
-        .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f0f2f5; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; margin-bottom: 30px; }
+        
+        /* Summary Card */
+        .summary-card { background: #e8f0fe; padding: 20px; border-radius: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #d2e3fc; }
+        .summary-label { font-weight: 600; color: #1967d2; font-size: 18px; }
+        .summary-value { font-size: 28px; font-weight: 800; color: #1a73e8; }
+
+        /* Form Styling */
+        .form-group { display: flex; gap: 12px; margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 10px; }
+        input { padding: 12px; border: 1px solid #ced4da; border-radius: 8px; flex: 1; font-size: 14px; }
+        input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
         
         /* Buttons */
-        button { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #1557b0; }
-        .delete-btn { background: #dc3545; padding: 5px 10px; font-size: 12px; }
-        .delete-btn:hover { background: #a71d2a; }
+        button { padding: 12px 24px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        button:hover { background: #1557b0; transform: translateY(-1px); }
+        .delete-btn { background: #feeef0; color: #d93025; padding: 6px 12px; font-size: 13px; border: 1px solid #fad2cf; }
+        .delete-btn:hover { background: #d93025; color: white; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background-color: #f8f9fa; color: #5f6368; }
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #eee; color: #5f6368; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; }
+        
+        /* Category Badge */
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; text-transform: capitalize; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 FinanceTracker</h1>
+        <h1>📊 FinanceTracker Pro</h1>
         
+        <div class="summary-card">
+            <span class="summary-label">Total Expenses</span>
+            <span id="totalDisplay" class="summary-value">$0.00</span>
+        </div>
+
         <div class="form-group">
-            <input type="text" id="item" placeholder="Expense Item (e.g. Pizza)">
+            <input type="text" id="item" placeholder="What did you buy?">
             <input type="number" id="amount" placeholder="Amount">
-            <input type="text" id="category" placeholder="Category">
+            <input type="text" id="category" placeholder="Category (e.g. Food)">
             <button onclick="addExpense()">Add Expense</button>
         </div>
 
@@ -37,7 +54,8 @@
                     <th>Item</th>
                     <th>Amount</th>
                     <th>Category</th>
-                    <th>Action</th> </tr>
+                    <th>Action</th>
+                </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -46,40 +64,65 @@
     <script>
         const API_URL = 'http://127.0.0.1:8000/expenses/';
 
-        // 1. GET DATA (Fetches all expenses and builds the table)
-        async function loadExpenses() {
-            const res = await fetch(API_URL);
-            const data = await res.json();
-            const body = document.getElementById('tableBody');
-            
-            // We added a <td> with a Delete button that carries the specific ID of the expense
-            body.innerHTML = data.map(ex => `
-                <tr>
-                    <td>${ex.item}</td>
-                    <td>$${ex.amount}</td>
-                    <td>${ex.category}</td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteExpense(${ex.id})">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
+        // Helper function for Category Colors
+        function getCategoryColor(cat) {
+            const colors = {
+                'food': '#f4b400',     // Yellow
+                'rent': '#4285f4',     // Blue
+                'shopping': '#af5cf7', // Purple
+                'bills': '#db4437',    // Red
+                'transport': '#0f9d58' // Green
+            };
+            return colors[cat.toLowerCase()] || '#5f6368'; // Default Gray
         }
 
-        // 2. POST DATA (Sends new expense to the backend)
+        // 1. GET DATA & UPDATE UI
+        async function loadExpenses() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                const body = document.getElementById('tableBody');
+                const totalDisplay = document.getElementById('totalDisplay');
+
+                // Handle Empty State
+                if (data.length === 0) {
+                    body.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:#999;">No expenses yet. Add your first one above!</td></tr>`;
+                    totalDisplay.innerText = "$0.00";
+                    return;
+                }
+
+                // Calculate Total
+                const total = data.reduce((sum, ex) => sum + parseFloat(ex.amount), 0);
+                totalDisplay.innerText = `$${total.toFixed(2)}`;
+
+                // Build Table Rows
+                body.innerHTML = data.map(ex => `
+                    <tr>
+                        <td style="font-weight:500;">${ex.item}</td>
+                        <td style="color:#1a73e8; font-weight:bold;">$${parseFloat(ex.amount).toFixed(2)}</td>
+                        <td><span class="badge" style="background:${getCategoryColor(ex.category)}">${ex.category}</span></td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteExpense(${ex.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error("Backend not running?", err);
+            }
+        }
+
+        // 2. POST DATA
         async function addExpense() {
             const item = document.getElementById('item').value;
             const amount = document.getElementById('amount').value;
             const category = document.getElementById('category').value;
 
-            if (!item || !amount) {
-                alert("Please fill in the Item and Amount!");
-                return;
-            }
+            if (!item || !amount) return alert("Please enter item and amount");
 
             await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ item, amount, category })
+                body: JSON.stringify({ item, amount, category: category || 'General' })
             });
             
             // Clear inputs
@@ -90,17 +133,14 @@
             loadExpenses(); 
         }
 
-        // 3. DELETE DATA (New function to remove an expense)
+        // 3. DELETE DATA
         async function deleteExpense(id) {
-            if (confirm("Are you sure you want to delete this expense?")) {
-                await fetch(`${API_URL}${id}`, {
-                    method: 'DELETE'
-                });
-                loadExpenses(); // Refresh the table after deleting
+            if (confirm("Delete this expense?")) {
+                await fetch(`${API_URL}${id}`, { method: 'DELETE' });
+                loadExpenses();
             }
         }
 
-        // Initial load
         loadExpenses();
     </script>
 </body>
