@@ -4,12 +4,18 @@
     <title>FinanceTracker</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f0f2f5; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         h1 { color: #1a73e8; text-align: center; }
         .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
         input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
-        button { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; }
+        
+        /* Buttons */
+        button { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #1557b0; }
+        .delete-btn { background: #dc3545; padding: 5px 10px; font-size: 12px; }
+        .delete-btn:hover { background: #a71d2a; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
         th { background-color: #f8f9fa; color: #5f6368; }
     </style>
@@ -31,7 +37,7 @@
                     <th>Item</th>
                     <th>Amount</th>
                     <th>Category</th>
-                </tr>
+                    <th>Action</th> </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -40,19 +46,35 @@
     <script>
         const API_URL = 'http://127.0.0.1:8000/expenses/';
 
-        // 1. GET DATA (The waiter fetching data)
+        // 1. GET DATA (Fetches all expenses and builds the table)
         async function loadExpenses() {
             const res = await fetch(API_URL);
             const data = await res.json();
             const body = document.getElementById('tableBody');
-            body.innerHTML = data.map(ex => `<tr><td>${ex.item}</td><td>$${ex.amount}</td><td>${ex.category}</td></tr>`).join('');
+            
+            // We added a <td> with a Delete button that carries the specific ID of the expense
+            body.innerHTML = data.map(ex => `
+                <tr>
+                    <td>${ex.item}</td>
+                    <td>$${ex.amount}</td>
+                    <td>${ex.category}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteExpense(${ex.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        // 2. POST DATA (The waiter sending an order)
+        // 2. POST DATA (Sends new expense to the backend)
         async function addExpense() {
             const item = document.getElementById('item').value;
             const amount = document.getElementById('amount').value;
             const category = document.getElementById('category').value;
+
+            if (!item || !amount) {
+                alert("Please fill in the Item and Amount!");
+                return;
+            }
 
             await fetch(API_URL, {
                 method: 'POST',
@@ -60,9 +82,25 @@
                 body: JSON.stringify({ item, amount, category })
             });
             
-            loadExpenses(); // Refresh the list automatically
+            // Clear inputs
+            document.getElementById('item').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('category').value = '';
+
+            loadExpenses(); 
         }
 
+        // 3. DELETE DATA (New function to remove an expense)
+        async function deleteExpense(id) {
+            if (confirm("Are you sure you want to delete this expense?")) {
+                await fetch(`${API_URL}${id}`, {
+                    method: 'DELETE'
+                });
+                loadExpenses(); // Refresh the table after deleting
+            }
+        }
+
+        // Initial load
         loadExpenses();
     </script>
 </body>
