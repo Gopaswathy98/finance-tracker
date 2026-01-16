@@ -4,7 +4,7 @@ A full-stack, real-time expense management dashboard. This application allows us
 
 ## 🔗 Live Preview
 
-**Check out the UI here:** [https://gopaswathy98.github.io/finance-tracker/](https://www.google.com/search?q=https://gopaswathy98.github.io/finance-tracker/)
+**Check out the UI here:** [https://gopaswathy98.github.io/finance-tracker/](https://www.google.com/search?q=https://https://gopaswathy98.github.io/finance-tracker/)
 
 *(Note: The live link demonstrates the UI/UX. Full CRUD functionality requires the backend server to be running locally.)*
 
@@ -61,5 +61,3 @@ python.exe -m uvicorn app.main:app --reload
 Open `docs/index.html` in any web browser to start tracking expenses!
 
 ---
-
-ns on finishing your first Full-Stack project! Would you like me to help you summarize this achievement for your Resume or LinkedIn?**
