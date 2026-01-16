@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinanceTracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f0f2f5; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h1 { color: #1a73e8; text-align: center; }
+        .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
+        button { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 FinanceTracker</h1>
+        
+        <div class="form-group">
+            <input type="text" id="item" placeholder="Expense Item (e.g. Pizza)">
+            <input type="number" id="amount" placeholder="Amount">
+            <input type="text" id="category" placeholder="Category">
+            <button onclick="addExpense()">Add Expense</button>
+        </div>
+
+        <table id="expenseTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/expenses/';
+
+        // 1. GET DATA (The waiter fetching data)
+        async function loadExpenses() {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            const body = document.getElementById('tableBody');
+            body.innerHTML = data.map(ex => `<tr><td>${ex.item}</td><td>$${ex.amount}</td><td>${ex.category}</td></tr>`).join('');
+        }
+
+        // 2. POST DATA (The waiter sending an order)
+        async function addExpense() {
+            const item = document.getElementById('item').value;
+            const amount = document.getElementById('amount').value;
+            const category = document.getElementById('category').value;
+
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ item, amount, category })
+            });
+            
+            loadExpenses(); // Refresh the list automatically
+        }
+
+        loadExpenses();
+    </script>
+</body>
+</html>
