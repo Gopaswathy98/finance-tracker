@@ -1,46 +1,61 @@
+📊 Finance Tracker
+A full-stack web application designed to help users track and manage their daily expenses. This project demonstrates a complete CRUD (Create, Read, Update, Delete) lifecycle using a modern Python backend and a responsive JavaScript frontend.
+
+🚀 Features
+Data Persistence: Expenses are stored securely in a local SQLite database using SQLAlchemy ORM.
+
+RESTful API: A high-performance backend built with FastAPI featuring automated Swagger documentation.
+
+Dynamic UI: A clean, user-friendly interface that updates in real-time using the JavaScript Fetch API without needing page reloads.
+
+Expense Management: Users can add items with categories and delete them instantly.
+
+🛠️ Tech Stack
+Backend: FastAPI (Python 3.x)
+
+Database: SQLite
+
+ORM: SQLAlchemy
+
+Frontend: HTML5, CSS3, Vanilla JavaScript
+
+Server: Uvicorn
+
+📂 Project Structure
+Plaintext
+
+finance-tracker/
+├── backend/            # Python FastAPI source code
+│   └── app/
+│       ├── routes/     # API endpoints (GET, POST, DELETE)
+│       ├── models.py   # Database schema definitions
+│       └── main.py     # Application entry point
+├── frontend/           # Web interface
+│   └── index.html      # Main dashboard and logic
+├── venv/               # Virtual environment (ignored by git)
+└── README.md           # Project documentation
+⚙️ Setup & Installation
+Clone the repository:
+
+Bash
+
 git clone https://github.com/Gopaswathy98/finance-tracker.git
 cd finance-tracker
+Set up the Virtual Environment:
 
-# create README.md from terminal
-cat > README.md <<'EOF'
-# Finance Tracker
+Bash
 
-A small full-stack app to track income and expenses (FastAPI + React).
-
-## Demo
-(put live demo link here after deployment)
-
-## Features (MVP)
-- User signup / login (JWT)
-- Add transactions (income / expense, amount, category, date, notes)
-- View & filter transactions
-- Dashboard with charts (expense breakdown, monthly totals)
-
-## Tech stack
-- Backend: FastAPI, SQLAlchemy, Pydantic, PostgreSQL
-- Frontend: React, TailwindCSS, Recharts (charts)
-- Auth: JWT
-- Dev & deploy: Docker, docker-compose, Vercel (frontend), Render (backend)
-finance-tracker/
-├─ backend/ # FastAPI app, models, routes
-├─ frontend/ # React app (Tailwind, Recharts)
-├─ docker-compose.yml
-└─ README.md
-
-## Getting started (local)
-### Backend
-```bash
-cd backend
 python -m venv venv
-# On Windows:
-# venv\Scripts\activate
-# On macOS / Linux:
-# source venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-cd frontend
-npm install
-npm run dev
+.\venv\Scripts\activate
+Install Dependencies:
 
+Bash
 
-## Project structure
+pip install fastapi uvicorn sqlalchemy
+Run the Backend Server:
+
+Bash
+
+cd backend
+python -m uvicorn app.main:app --reload
+Open the Frontend: Simply open frontend/index.html in your preferred web browser.
