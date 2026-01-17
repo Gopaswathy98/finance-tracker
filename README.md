@@ -1,4 +1,4 @@
-📊 Finance Tracker Pro
+📊**** Finance Tracker Pro****
 
 A full-stack, real-time expense management dashboard. This application allows users to track their spending with a polished user interface, featuring dynamic data calculation and persistent database storage.
 
