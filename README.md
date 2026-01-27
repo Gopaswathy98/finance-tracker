@@ -9,19 +9,23 @@ https://gopaswathy98.github.io/finance-tracker/
 
 *(Note: The live link demonstrates the UI/UX. Full CRUD functionality requires the backend server to be running locally.)*
 
-## 🚀 Key Features
+🚀 Technical Highlights
+Reactive State Management: Implemented custom JavaScript logic to handle real-time expenditure calculations and DOM updates without the overhead of heavy frameworks.
 
-* **Real-time Data Processing**: Automatically calculates and updates the "Total Expenses" whenever an item is added or removed.
-* **Smart Categorization**: Uses JavaScript logic to assign color-coded badges to different expense types (e.g., Food, Rent, Transport).
-* **Full CRUD Lifecycle**: Users can **C**reate, **R**ead, and **D**elete entries via a RESTful API.
-* **Professional UI**: A clean, responsive dashboard built with modern CSS (Shadows, Flexbox, and Transitions).
+RESTful API Design: Developed a structured backend using FastAPI to handle concurrent requests and maintain a clean separation of concerns.
 
-## 🛠️ Tech Stack
+Asynchronous Communication: Utilized modern Fetch API patterns with async/await to ensure a non-blocking, smooth User Experience.
 
-* **Backend**: FastAPI (Python)
-* **Database**: SQLite with SQLAlchemy ORM
-* **Frontend**: Vanilla JavaScript (Fetch API), HTML5, CSS3
-* **Environment**: Python Virtual Environment (venv)
+Relational Mapping: Employed SQLAlchemy ORM to manage database interactions, ensuring data integrity and scalable schema design.
+
+🛠️ Core Technology
+Backend: FastAPI (Python 3.x)
+
+ORM: SQLAlchemy (Object Relational Mapper)
+
+Database: SQLite3 (Persistent Storage)
+
+Frontend: Vanilla ECMAScript 6+, HTML5, CSS3 (Modern Flexbox/Grid)
 
 ## 📂 Project Structure
 
