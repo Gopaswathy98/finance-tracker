@@ -1,68 +1,49 @@
 📊 Finance Tracker Pro
 
-A full-stack, real-time expense management dashboard. This application allows users to track their spending with a polished user interface, featuring dynamic data calculation and persistent database storage.
+Finance Tracker Pro is a high-performance, full-stack financial management dashboard. It is designed to provide real-time expenditure tracking with a focus on backend efficiency, data persistence, and a secure user experience.
 
-## 🔗 Live Preview
+🛠️ Tech Stack
+Backend: Python (FastAPI) 
+Database: PostgreSQL with SQLAlchemy ORM 
+Frontend: React.js & Tailwind CSS 
+Security: JWT (JSON Web Tokens) 
+Containerization: Docker 
 
-**Check out the UI here:**  
-https://gopaswathy98.github.io/finance-tracker/
+🏗️ Technical Highlights
 
-*(Note: The live link demonstrates the UI/UX. Full CRUD functionality requires the backend server to be running locally.)*
+Asynchronous Backend: Built using FastAPI to handle concurrent data requests with high speed and low latency.
+Relational Data Mapping: Implemented PostgreSQL to manage complex financial records with high data integrity.
+Secure Authentication: Engineered JWT-based authentication to provide stateless, secure user sessions.
+Data Visualization: Developed a dynamic UI using React to visualize spending habits through interactive components.
+Standardized Environments: Fully containerized with Docker to ensure the application runs consistently across development and production servers.
 
-🚀 Technical Highlights
-Reactive State Management: Implemented custom JavaScript logic to handle real-time expenditure calculations and DOM updates without the overhead of heavy frameworks.
+📂 Project Structure
 
-RESTful API Design: Developed a structured backend using FastAPI to handle concurrent requests and maintain a clean separation of concerns.
-
-Asynchronous Communication: Utilized modern Fetch API patterns with async/await to ensure a non-blocking, smooth User Experience.
-
-Relational Mapping: Employed SQLAlchemy ORM to manage database interactions, ensuring data integrity and scalable schema design.
-
-🛠️ Core Technology
-Backend: FastAPI (Python 3.x)
-
-ORM: SQLAlchemy (Object Relational Mapper)
-
-Database: SQLite3 (Persistent Storage)
-
-Frontend: Vanilla ECMAScript 6+, HTML5, CSS3 (Modern Flexbox/Grid)
-
-## 📂 Project Structure
-
-```text
-finance-tracker/
-├── backend/            # FastAPI Source Code
-│   └── app/
-│       ├── routes/     # API Endpoints (GET, POST, DELETE)
-│       ├── models.py   # Database Schema
-│       └── main.py     # Server Entry Point
-├── docs/               # Frontend (Hosted on GitHub Pages)
-│   └── index.html      # Pro Dashboard & JS Logic
-├── finance.db          # SQLite Database (Local only)
+Plaintext
+├── backend/            # FastAPI Source Code & REST Endpoints
+│   ├── app/
+│   │   ├── auth/       # JWT Logic
+│   │   ├── models/     # Database Schemas
+│   │   └── main.py     # API Entry Point
+├── frontend/           # React Source Code
+│   └── src/            # Components & Visualization Logic
+├── docker-compose.yml  # Container orchestration
 └── README.md           # Documentation
 
-```
+⚙️ Installation & Setup
 
-## ⚙️ Installation & Setup
+Clone the Repository:
 
-1. **Clone & Navigate**:
-```bash
+Bash
 git clone https://github.com/Gopaswathy98/finance-tracker.git
 cd finance-tracker
+Environment Setup:
+Configure your .env file with PostgreSQL credentials and a SECRET_KEY for JWT.
 
-```
-
-
-2. **Start the Backend**:
-```bash
-.\venv\Scripts\activate
-cd backend
-python.exe -m uvicorn app.main:app --reload
-
-```
-
-
-3. **View the App**:
-Open `docs/index.html` in any web browser to start tracking expenses!
-
----
+Run with Docker:
+Bash
+docker-compose up --build
+The app will be accessible at http://localhost:3000.
+Bash
+docker-compose up --build
+The app will be accessible at http://localhost:3000.
