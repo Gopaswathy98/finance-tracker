@@ -2,10 +2,12 @@
 
 Finance Tracker Pro is a high-performance, full-stack financial management dashboard. It is designed to provide real-time expenditure tracking with a focus on backend efficiency, data persistence, and a secure user experience.
 
-![Finance Tracker Main Dashboard](finance-tracker-main.png)
+![Finance Tracker Main Dashboard] 
+(finance-tracker-main.png)
 
 ### Project Demo
-![Finance Tracker in Action](finance-tracker-demo.png)
+![Finance Tracker in Action]
+(finance-tracker-demo.png)
 
 🛠️ Tech Stack
 Backend: Python (FastAPI) 
